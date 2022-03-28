@@ -33,7 +33,10 @@ export function useTelephone(_options?: Partial<Options>) {
 		..._options,
 	};
 
-	const [country, setCountry] = useState<CountryCode>(countries[0].value);
+	const [country, setCountry] = useState<CountryCode>(
+		() => countries.filter(country => options.allowedCountryCodes.includes(country.value))[0].value
+	);
+
 	const [input, setInputValue] = useState(options.initialValue);
 
 	const {e164, valid} = useMemo(() => {
