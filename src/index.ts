@@ -12,7 +12,9 @@ export function getCountryFlag(code: CountryCode, aspect = '3x2') {
 	return `https://purecatamphetamine.github.io/country-flag-icons/${aspect}/${code}.svg`;
 }
 
-export const countries = getCountries()
+const allCountryCodes = getCountries();
+
+export const countries = allCountryCodes
 	.map(country => ({
 		label: new Intl.DisplayNames(['en'], {type: 'region'}).of(country)!,
 		value: country,
@@ -21,11 +23,13 @@ export const countries = getCountries()
 
 export interface Options {
 	initialValue: string;
+	allowedCountryCodes: CountryCode[];
 }
 
 export function useTelephone(_options?: Partial<Options>) {
 	const options: Options = {
 		initialValue: '',
+		allowedCountryCodes: allCountryCodes,
 		..._options,
 	};
 
@@ -37,7 +41,7 @@ export function useTelephone(_options?: Partial<Options>) {
 			extract: true,
 		});
 
-		if (e164?.country && e164.isPossible()) {
+		if (e164?.country && allCountryCodes.includes(e164.country) && e164.isPossible()) {
 			setCountry(old => {
 				if (old === e164.country) {
 					return old;
@@ -66,6 +70,10 @@ export function useTelephone(_options?: Partial<Options>) {
 		},
 
 		onChangeCountry(country: CountryCode) {
+			if (!allCountryCodes.includes(country)) {
+				throw new Error('Country is not allowed!');
+			}
+
 			setCountry(country);
 
 			if (e164?.nationalNumber) {
