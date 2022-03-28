@@ -1,9 +1,16 @@
 import {ChangeEvent, useMemo, useState} from 'react';
-import parse, {CountryCode} from 'libphonenumber-js';
+import parse, {CountryCode, getCountries, getCountryCallingCode} from 'libphonenumber-js';
 
 export function getCountryFlag(code: CountryCode, aspect = '3x2') {
 	return `http://purecatamphetamine.github.io/country-flag-icons/${aspect}/${code}.svg`;
 }
+
+export const countries = getCountries()
+	.map(country => ({
+		label: new Intl.DisplayNames(['en'], {type: 'region'}).of(country)!,
+		value: country,
+	}))
+	.sort((a, b) => a.label.localeCompare(b.label));
 
 export interface Options {
 	defaultCountry: CountryCode;
@@ -13,7 +20,7 @@ export interface Options {
 export function useTelephone(_options?: Partial<Options>) {
 	const options: Options = {
 		defaultCountry: 'US',
-		initialValue: '+1 (123) 456-7890',
+		initialValue: '',
 		..._options,
 	};
 
@@ -29,13 +36,28 @@ export function useTelephone(_options?: Partial<Options>) {
 	}, [input]);
 
 	return {
-		e164: e164?.number ?? null,
-		onChange(event: ChangeEvent<HTMLInputElement>) {
-			setInputValue(event.target.value);
-		},
 		valid,
 		value: input,
 		flag: getCountryFlag(e164?.country ?? options.defaultCountry),
+		country: e164?.country ?? null,
+		number: e164?.number ?? null,
+
+		getE164() {
+			return e164;
+		},
+
+		onChange(event: ChangeEvent<HTMLInputElement>) {
+			setInputValue(event.target.value);
+		},
+
+		onChangeCountry(country: CountryCode) {
+			if (e164?.nationalNumber) {
+				setInputValue(getCountryCallingCode(country) + e164.nationalNumber);
+				return;
+			}
+
+			setInputValue(`+${getCountryCallingCode(country)}`);
+		},
 	} as const;
 }
 
