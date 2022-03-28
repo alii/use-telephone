@@ -2,7 +2,7 @@ import {ChangeEvent, useMemo, useState} from 'react';
 import parse, {CountryCode, getCountries, getCountryCallingCode} from 'libphonenumber-js';
 
 export function getCountryFlag(code: CountryCode, aspect = '3x2') {
-	return `http://purecatamphetamine.github.io/country-flag-icons/${aspect}/${code}.svg`;
+	return `https://purecatamphetamine.github.io/country-flag-icons/${aspect}/${code}.svg` as const;
 }
 
 export const countries = getCountries()
@@ -13,13 +13,11 @@ export const countries = getCountries()
 	.sort((a, b) => a.label.localeCompare(b.label));
 
 export interface Options {
-	defaultCountry: CountryCode;
 	initialValue: string;
 }
 
 export function useTelephone(_options?: Partial<Options>) {
 	const options: Options = {
-		defaultCountry: 'US',
 		initialValue: '',
 		..._options,
 	};
@@ -38,6 +36,7 @@ export function useTelephone(_options?: Partial<Options>) {
 	}, [input]);
 
 	return {
+		parsed: e164,
 		valid,
 		value: input,
 		flag: e164?.country ? getCountryFlag(e164?.country) : null,
