@@ -35,7 +35,7 @@ export function useTelephone(_options?: Partial<Options>) {
 			extract: true,
 		});
 
-		if (e164?.country) {
+		if (e164?.country && e164.isPossible()) {
 			setCountry(old => {
 				if (old === e164.country) {
 					return old;

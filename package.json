@@ -1,7 +1,7 @@
 {
 	"name": "use-telephone",
 	"description": "A React hook for building phone number inputs",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"types": "./dist/index.d.ts",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
