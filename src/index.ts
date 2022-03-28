@@ -6,6 +6,8 @@ import parse, {
 	getCountryCallingCode,
 } from 'libphonenumber-js';
 
+export {CountryCode};
+
 export function getCountryFlag(code: CountryCode, aspect = '3x2') {
 	return `https://purecatamphetamine.github.io/country-flag-icons/${aspect}/${code}.svg`;
 }
