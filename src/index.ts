@@ -27,7 +27,9 @@ export function useTelephone(_options?: Partial<Options>) {
 	const [input, setInputValue] = useState(options.initialValue);
 
 	const {e164, valid} = useMemo(() => {
-		const e164 = parse(input);
+		const e164 = parse(input, {
+			extract: true,
+		});
 
 		return {
 			e164,
@@ -38,7 +40,7 @@ export function useTelephone(_options?: Partial<Options>) {
 	return {
 		valid,
 		value: input,
-		flag: getCountryFlag(e164?.country ?? options.defaultCountry),
+		flag: e164?.country ? getCountryFlag(e164?.country) : null,
 		country: e164?.country ?? null,
 		number: e164?.number ?? null,
 
@@ -52,11 +54,11 @@ export function useTelephone(_options?: Partial<Options>) {
 
 		onChangeCountry(country: CountryCode) {
 			if (e164?.nationalNumber) {
-				setInputValue(getCountryCallingCode(country) + e164.nationalNumber);
+				setInputValue('+' + getCountryCallingCode(country) + e164.nationalNumber);
 				return;
 			}
 
-			setInputValue(`+${getCountryCallingCode(country)}`);
+			setInputValue('+' + getCountryCallingCode(country));
 		},
 	} as const;
 }
