@@ -16,10 +16,10 @@ const allCountryCodes = getCountries();
 
 export const countries = allCountryCodes
 	.map(country => ({
-		label: new Intl.DisplayNames(['en'], {type: 'region'}).of(country)!,
-		value: country,
+		name: new Intl.DisplayNames(['en'], {type: 'region'}).of(country)!,
+		code: country,
 	}))
-	.sort((a, b) => a.label.localeCompare(b.label));
+	.sort((a, b) => a.name.localeCompare(b.name));
 
 export interface Options {
 	initialValue: string;
@@ -34,7 +34,7 @@ export function useTelephone(_options?: Partial<Options>) {
 	};
 
 	const [country, setCountry] = useState<CountryCode>(
-		() => countries.filter(country => options.allowedCountryCodes.includes(country.value))[0].value
+		() => countries.filter(country => options.allowedCountryCodes.includes(country.code))[0].code
 	);
 
 	const [input, setInputValue] = useState(options.initialValue);
