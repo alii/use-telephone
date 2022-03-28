@@ -1,8 +1,13 @@
 import {ChangeEvent, useMemo, useState} from 'react';
-import parse, {CountryCode, getCountries, getCountryCallingCode} from 'libphonenumber-js';
+import parse, {
+	CountryCode,
+	formatIncompletePhoneNumber,
+	getCountries,
+	getCountryCallingCode,
+} from 'libphonenumber-js';
 
-export function getCountryFlag(code: string, aspect = '3x2') {
-	return `https://purecatamphetamine.github.io/country-flag-icons/${aspect}/${code}.svg` as const;
+export function getCountryFlag(code: CountryCode, aspect = '3x2') {
+	return `https://purecatamphetamine.github.io/country-flag-icons/${aspect}/${code}.svg`;
 }
 
 export const countries = getCountries()
@@ -30,8 +35,14 @@ export function useTelephone(_options?: Partial<Options>) {
 			extract: true,
 		});
 
-		if (e164?.country && e164.country !== country) {
-			setCountry(e164.country);
+		if (e164?.country) {
+			setCountry(old => {
+				if (old === e164.country) {
+					return old;
+				}
+
+				return e164.country ?? old;
+			});
 		}
 
 		return {
@@ -44,7 +55,7 @@ export function useTelephone(_options?: Partial<Options>) {
 		country,
 		parsed: e164,
 		valid,
-		value: input,
+		value: formatIncompletePhoneNumber(input, country),
 		flag: getCountryFlag(country),
 		number: e164?.number ?? null,
 
