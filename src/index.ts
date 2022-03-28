@@ -41,6 +41,7 @@ export function useTelephone(_options?: Partial<Options>) {
 
 	const {e164, valid} = useMemo(() => {
 		const e164 = parse(input, {
+			defaultCountry: country,
 			extract: true,
 		});
 
