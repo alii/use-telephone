@@ -1,7 +1,7 @@
 import {ChangeEvent, useMemo, useState} from 'react';
 import parse, {CountryCode, getCountries, getCountryCallingCode} from 'libphonenumber-js';
 
-export function getCountryFlag(code: CountryCode, aspect = '3x2') {
+export function getCountryFlag(code: string, aspect = '3x2') {
 	return `https://purecatamphetamine.github.io/country-flag-icons/${aspect}/${code}.svg` as const;
 }
 
@@ -22,12 +22,17 @@ export function useTelephone(_options?: Partial<Options>) {
 		..._options,
 	};
 
+	const [country, setCountry] = useState<CountryCode>(countries[0].value);
 	const [input, setInputValue] = useState(options.initialValue);
 
 	const {e164, valid} = useMemo(() => {
 		const e164 = parse(input, {
 			extract: true,
 		});
+
+		if (e164?.country && e164.country !== country) {
+			setCountry(e164.country);
+		}
 
 		return {
 			e164,
@@ -36,22 +41,20 @@ export function useTelephone(_options?: Partial<Options>) {
 	}, [input]);
 
 	return {
+		country,
 		parsed: e164,
 		valid,
 		value: input,
-		flag: e164?.country ? getCountryFlag(e164?.country) : null,
-		country: e164?.country ?? null,
+		flag: getCountryFlag(country),
 		number: e164?.number ?? null,
-
-		getE164() {
-			return e164;
-		},
 
 		onChange(event: ChangeEvent<HTMLInputElement>) {
 			setInputValue(event.target.value);
 		},
 
 		onChangeCountry(country: CountryCode) {
+			setCountry(country);
+
 			if (e164?.nationalNumber) {
 				setInputValue('+' + getCountryCallingCode(country) + e164.nationalNumber);
 				return;
