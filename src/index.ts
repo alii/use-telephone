@@ -45,7 +45,7 @@ export function useTelephone(_options?: Partial<Options>) {
 			extract: true,
 		});
 
-		if (e164?.country && allCountryCodes.includes(e164.country) && e164.isPossible()) {
+		if (e164?.country && options.allowedCountryCodes.includes(e164.country) && e164.isPossible()) {
 			setCountry(old => {
 				if (old === e164.country) {
 					return old;
@@ -74,7 +74,7 @@ export function useTelephone(_options?: Partial<Options>) {
 		},
 
 		onChangeCountry(country: CountryCode) {
-			if (!allCountryCodes.includes(country)) {
+			if (!options.allowedCountryCodes.includes(country)) {
 				throw new Error('Country is not allowed!');
 			}
 
