@@ -1,0 +1,54 @@
+{
+	"name": "use-telephone",
+	"description": "A React hook for building phone number inputs",
+	"version": "1.0.0",
+	"types": "./dist/index.d.ts",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/alii/use-telephone"
+	},
+	"author": "Alistair Smith <hi@alistair.sh>",
+	"license": "MIT",
+	"funding": {
+		"type": "github",
+		"url": "https://github.com/sponsors/alii"
+	},
+	"devDependencies": {
+		"@types/react": "^17.0.43",
+		"@typescript-eslint/eslint-plugin": "^5.16.0",
+		"@typescript-eslint/parser": "^5.16.0",
+		"eslint": "^8.12.0",
+		"eslint-config-xo": "^0.40.0",
+		"eslint-config-xo-typescript": "^0.50.0",
+		"prettier": "^2.6.1",
+		"tsup": "^5.12.1",
+		"typescript": "^4.6.3"
+	},
+	"scripts": {
+		"build": "tsup src/index.ts --dts --format esm,cjs",
+		"lint": "eslint ./src/**/*.ts",
+		"fix": "eslint ./src/**/*.ts --fix"
+	},
+	"bugs": {
+		"url": "https://github.com/alii/use-telephone/issues"
+	},
+	"homepage": "https://github.com/alii/use-telephone#readme",
+	"files": [
+		"dist",
+		"package.json"
+	],
+	"keywords": [
+		"react",
+		"hook",
+		"phone"
+	],
+	"packageManager": "yarn@3.2.0",
+	"peerDependencies": {
+		"react": "*"
+	},
+	"dependencies": {
+		"libphonenumber-js": "^1.9.50"
+	}
+}
